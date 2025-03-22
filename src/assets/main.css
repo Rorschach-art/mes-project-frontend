@@ -1,182 +1,68 @@
-<template>
-  <div class="login-page">
-    <!-- 背景浮动元素 -->
-    <div v-for="i in 12" :key="i" :class="`background-element element${i}`"></div>
-
-    <!-- 登录卡片 -->
-    <div class="card">
-      <div class="card-left">
-        <svg class="background-svg" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
-          <path d="M 993.50 914.20 L 22.90 914.20 L 23.20 913.30 L 993.20 913.30 Z" fill="#d7e4f9"/>
-          <path d="M 747.50 123.50 L 932.80 123.50 L 932.80 246.70 L 747.50 246.70 Z" fill="#ffb31a"/>
-          <path d="M 747.50 123.50 L 840.20 200.90 L 932.80 123.50 L 932.80 246.70 L 747.50 246.70 Z" fill="#ff8f18"/>
-          <path d="M 452.10 761.70 L 317.00 896.90 L 586.50 909.90 L 461.00 762.00 Z" fill="#d3e2f3"/>
-          <path d="M 452.10 772.90 L 328.10 896.90 L 575.30 909.90 L 460.30 773.20 Z" fill="#adbedf"/>
-          <path d="M 537.80 896.90 L 366.40 897.90 L 367.40 909.90 L 536.80 909.90 Z" fill="#ffffff"/>
-          <path d="M 471.60 896.90 L 432.50 897.10 L 437.50 909.90 L 466.60 909.90 Z" fill="#5587eb"/>
-        </svg>
-      </div>
-      <div class="card-right">
-        <div class="login-content">
-          <button class="login-button" @mouseover="hover = true" @mouseleave="hover = false">
-            登录
-            <svg class="arrow" viewBox="0 0 24 24" :class="{ 'arrow-hover': hover }">
-              <path d="M5 12h14M12 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2"/>
-            </svg>
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
-
-<script>
-export default {
-  name: 'LoginPage',
-  data() {
-    return {
-      hover: false
-    }
-  }
-}
-</script>
-
-<style scoped>
-.login-page {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #b3d4fc 0%, #dbe9ff 100%);
-  overflow: hidden;
+@import './base.css';
+#app {
+  width: 100vw;
+  min-height: 100vh; /* 确保占满视口高度 */
+  margin: 0;
+  padding: 0; /* 移除全局内边距，交给子组件控制 */
+  font-weight: normal;
   display: flex;
-  justify-content: flex-end;
+  flex-direction: column;
   align-items: center;
-  padding-right: 10%;
-  font-family: Arial, sans-serif;
-  position: relative; /* 确保背景元素相对于页面定位 */
+  box-sizing: border-box;
 }
 
-/* 背景浮动元素基础样式 */
-.background-element {
-  position: absolute;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 50%;
-  animation: float 8s infinite ease-in-out;
+/* 链接样式，使用 base.css 中的变量 */
+a,
+.green {
+  text-decoration: none;
+  color: var(--color-text); /* 支持明暗模式 */
+  transition: all 0.4s ease;
+  padding: 3px;
 }
 
-/* 使用 vw 和 vh 定义背景元素，确保铺满 */
-.element1 { width: 7vw; height: 7vw; top: 5vh; left: 10vw; animation-delay: 0s; }
-.element2 { width: 5vw; height: 5vw; top: 85vh; left: 85vw; animation-delay: 1s; }
-.element3 { width: 9vw; height: 9vw; top: 60vh; left: 15vw; animation-delay: 2s; }
-.element4 { width: 6vw; height: 6vw; top: 25vh; left: 75vw; animation-delay: 0.5s; }
-.element5 { width: 8vw; height: 8vw; top: 75vh; left: 35vw; animation-delay: 1.5s; }
-.element6 { width: 4vw; height: 4vw; top: 15vh; left: 95vw; animation-delay: 3s; }
-.element7 { width: 5.5vw; height: 5.5vw; top: 45vh; left: 55vw; animation-delay: 2.5s; }
-.element8 { width: 6.5vw; height: 6.5vw; top: 35vh; left: 25vw; animation-delay: 4s; }
-.element9 { width: 4.5vw; height: 4.5vw; top: 95vh; left: 65vw; animation-delay: 3.5s; }
-.element10 { width: 7.5vw; height: 7.5vw; top: 20vh; left: 45vw; animation-delay: 1.2s; }
-.element11 { width: 3.5vw; height: 3.5vw; top: 70vh; left: 5vw; animation-delay: 2.8s; }
-.element12 { width: 6vw; height: 6vw; top: 50vh; left: 80vw; animation-delay: 0.8s; }
-
-/* 卡片样式 */
-.card {
-  width: 600px;
-  height: 400px;
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  animation: cardPop 1s ease-out;
-  display: flex;
-  position: fixed;
-  right: 10%;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.card-left {
-  width: 40%;
-  height: 100%;
-  position: relative;
-  overflow: hidden;
-}
-
-.card-right {
-  width: 60%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.background-svg {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0.8;
-}
-
-.login-content {
-  text-align: center;
-}
-
-.login-button {
-  padding: 12px 24px;
-  background: #4c6ef4;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 16px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: all 0.3s ease;
-}
-
-.login-button:hover {
-  background: #3858d6;
-  transform: translateX(5px);
-}
-
-.arrow {
-  width: 20px;
-  height: 20px;
-  transition: transform 0.3s ease;
-}
-
-.arrow-hover {
-  transform: translateX(5px);
-}
-
-/* 动画定义 */
-@keyframes float {
-  0% { transform: translateY(0); }
-  50% { transform: translateY(-4vh); }
-  100% { transform: translateY(0); }
-}
-
-@keyframes cardPop {
-  0% { opacity: 0; transform: translateY(-50%) scale(0.8); }
-  100% { opacity: 1; transform: translateY(-50%) scale(1); }
-}
-
-/* 响应式调整，确保背景铺满 */
-@media screen and (max-width: 768px) {
-  .background-element {
-    min-width: 30px; /* 最小尺寸 */
-    min-height: 30px;
-  }
-  .card {
-    width: 90vw; /* 在小屏幕上调整卡片宽度 */
-    right: 5%;
+/* 悬停效果 */
+@media (hover: hover) {
+  a:hover,
+  .green:hover {
+    background-color: var(--color-border);
+    color: var(--color-heading);
+    transform: scale(1.05); /* 轻微放大 */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* 添加阴影 */
   }
 }
 
-@media screen and (max-height: 600px) {
-  .background-element {
-    min-width: 30px;
-    min-height: 30px;
-  }
-  .card {
-    height: 80vh; /* 在矮屏幕上调整卡片高度 */
+/* 响应式布局 */
+@media (min-width: 768px) {
+  #app {
+    padding: 0 1.5rem; /* 小屏幕内边距 */
   }
 }
-</style>
+
+@media (min-width: 1024px) {
+  body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+  }
+
+  #app {
+    width: 100%;
+    max-width: 1440px; /* 更大的最大宽度，适合现代宽屏 */
+    padding: 0 0;
+    display: block; /* 默认不使用网格布局 */
+  }
+
+  /* 可选的两列布局 */
+  #app.grid-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 两列等宽 */
+    gap: 2rem;
+  }
+}
+
+@media (min-width: 1440px) {
+  #app {
+    max-width: 1600px; /* 超大屏幕 */
+  }
+}
