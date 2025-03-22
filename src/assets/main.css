@@ -1,0 +1,69 @@
+@import './base.css';
+
+#app {
+  width: 100%;
+  min-height: 100vh; /* 确保占满视口高度 */
+  margin: 0;
+  padding: 0; /* 移除全局内边距，交给子组件控制 */
+  font-weight: normal;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+/* 链接样式，使用 base.css 中的变量 */
+a,
+.green {
+  text-decoration: none;
+  color: var(--color-text); /* 支持明暗模式 */
+  transition: all 0.4s ease;
+  padding: 3px;
+}
+
+/* 悬停效果 */
+@media (hover: hover) {
+  a:hover,
+  .green:hover {
+    background-color: var(--color-border);
+    color: var(--color-heading);
+    transform: scale(1.05); /* 轻微放大 */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* 添加阴影 */
+  }
+}
+
+/* 响应式布局 */
+@media (min-width: 768px) {
+  #app {
+    padding: 0 1.5rem; /* 小屏幕内边距 */
+  }
+}
+
+@media (min-width: 1024px) {
+  body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+  }
+
+  #app {
+    width: 100%;
+    max-width: 1440px; /* 更大的最大宽度，适合现代宽屏 */
+    padding: 0 2rem;
+    display: block; /* 默认不使用网格布局 */
+  }
+
+  /* 可选的两列布局 */
+  #app.grid-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 两列等宽 */
+    gap: 2rem;
+  }
+}
+
+@media (min-width: 1440px) {
+  #app {
+    max-width: 1600px; /* 超大屏幕 */
+  }
+}
