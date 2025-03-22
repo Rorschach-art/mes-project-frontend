@@ -34,21 +34,17 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'LoginPage',
-  data() {
-    return {
-      hover: false,
-      active: false,
-    }
-  },
-  methods: {
-    mouseleaveHandler() {
-      this.hover = false
-      this.active = false
-    },
-  },
+<script setup lang="ts">
+import { ref } from 'vue'
+
+// 定义响应式变量
+const hover = ref(false)
+const active = ref(false)
+
+// 定义鼠标离开处理函数
+const mouseleaveHandler = () => {
+  hover.value = false
+  active.value = false
 }
 </script>
 
