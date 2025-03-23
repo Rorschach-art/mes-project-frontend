@@ -16,18 +16,99 @@
       </div>
       <div class="card-right">
         <div class="login-content">
-          <button
-            class="login-button"
-            @mouseover="hover = true"
-            @mouseleave="mouseleaveHandler"
-            @mousedown="active = true"
-            @mouseup="active = false"
+          <h2 class="login-title">欢迎登录</h2>
+          <el-form
+            :model="loginForm"
+            ref="loginFormRef"
+            :rules="rules"
+            @submit.prevent="handleLogin"
           >
-            登录
-            <svg class="arrow" viewBox="0 0 24 24" :class="{ 'arrow-hover': hover }">
-              <path d="M5 12h14M12 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" />
-            </svg>
-          </button>
+            <el-form-item prop="username">
+              <el-input v-model="loginForm.username" placeholder="请输入用户名" clearable>
+                <template #prefix>
+                  <el-icon><User /></el-icon>
+                </template>
+              </el-input>
+            </el-form-item>
+            <el-form-item prop="password">
+              <el-input
+                v-model="loginForm.password"
+                type="password"
+                placeholder="请输入密码"
+                show-password
+              >
+                <template #prefix>
+                  <el-icon><Lock /></el-icon>
+                </template>
+              </el-input>
+            </el-form-item>
+            <el-form-item>
+              <div class="options">
+                <el-switch v-model="loginForm.rememberMe" active-text="记住我" />
+                <a href="#" class="forgot-password">忘记密码?</a>
+              </div>
+            </el-form-item>
+            <el-form-item>
+              <el-button
+                type="primary"
+                size="large"
+                class="login-button"
+                native-type="submit"
+                :loading="loading"
+                @mouseover="hover = true"
+                @mouseleave="mouseleaveHandler"
+                @mousedown="active = true"
+                @mouseup="active = false"
+              >
+                登录
+                <svg class="arrow" viewBox="0 0 24 24" :class="{ 'arrow-hover': hover }">
+                  <path
+                    d="M5 12h14M12 5l7 7-7 7"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  />
+                </svg>
+              </el-button>
+            </el-form-item>
+          </el-form>
+          <div class="social-login">
+            <el-tooltip content="短信登录" placement="top">
+              <el-button circle plain @click="socialLogin('sms')">
+                <el-icon><Message /></el-icon>
+              </el-button>
+            </el-tooltip>
+            <el-tooltip content="微信登录" placement="top">
+              <el-button circle plain @click="socialLogin('wechat')">
+                <svg class="social-icon" viewBox="0 0 24 24">
+                  <path
+                    d="M18.5 8.5c0-2.5-2-4.5-4.5-4.5s-4.5 2-4.5 4.5 2 4.5 4.5 4.5c.7 0 1.4-.2 2-.5l2.5 1.5-1-3zM5.5 12c-2 0-3.5-1.5-3.5-3.5S3.5 5 5.5 5s3.5 1.5 3.5 3.5c0 .7-.2 1.3-.5 1.8l-1 3 2.5-1.5c.6.3 1.3.5 2 .5 2 0 3.5-1.5 3.5-3.5"
+                    fill="none"
+                    stroke="#67C23A"
+                    stroke-width="2"
+                  />
+                </svg>
+              </el-button>
+            </el-tooltip>
+            <el-tooltip content="钉钉登录" placement="top">
+              <el-button circle plain @click="socialLogin('dingtalk')">
+                <svg class="social-icon" viewBox="0 0 24 24">
+                  <path
+                    d="M12 2L2 9h20L12 2zm0 20l10-7H2l10 7z"
+                    fill="none"
+                    stroke="#409EFF"
+                    stroke-width="2"
+                  />
+                </svg>
+              </el-button>
+            </el-tooltip>
+            <el-tooltip content="GitHub登录" placement="top">
+              <el-button circle plain @click="socialLogin('github')">
+                <el-icon><i class="fab fa-github" /></el-icon>
+              </el-button>
+            </el-tooltip>
+          </div>
+          <p class="register-link">还没有账号? <a href="#">立即注册</a></p>
         </div>
       </div>
     </div>
@@ -35,30 +116,68 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
+import type { FormInstance, FormRules } from 'element-plus'
+import { User, Lock, Message } from '@element-plus/icons-vue'
 
-// 定义响应式变量
+// 响应式变量
 const hover = ref(false)
 const active = ref(false)
+const loading = ref(false)
+const loginFormRef = ref<FormInstance>()
+const loginForm = reactive({
+  username: '',
+  password: '',
+  rememberMe: false,
+})
 
-// 定义鼠标离开处理函数
+// 表单校验规则
+const rules = reactive<FormRules>({
+  username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
+  password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
+})
+
+// 处理鼠标离开
 const mouseleaveHandler = () => {
   hover.value = false
   active.value = false
+}
+
+// 登录处理函数
+const handleLogin = () => {
+  loginFormRef.value?.validate((valid) => {
+    if (valid) {
+      loading.value = true
+      console.log('登录信息:', loginForm)
+      // 模拟登录请求
+      setTimeout(() => {
+        loading.value = false
+      }, 1000)
+    }
+  })
+}
+
+// 社交登录处理函数
+const socialLogin = (type: string) => {
+  console.log(`使用 ${type} 登录`)
+  // 这里可以添加具体的社交登录逻辑
 }
 </script>
 
 <style scoped>
 .login-page {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #b3d4fc 0%, #dbe9ff 100%);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(135deg, #75abed 0%, #3876da 100%);
   overflow: hidden;
   display: flex;
   justify-content: flex-end;
   align-items: center;
   padding-right: 10%;
   font-family: Arial, sans-serif;
-  position: relative;
 }
 
 /* 背景浮动元素 */
@@ -66,7 +185,8 @@ const mouseleaveHandler = () => {
   position: absolute;
   background: rgba(255, 255, 255, 0.2);
   border-radius: 50%;
-  animation: float 8s infinite ease-in-out;
+  animation: floatGlow 8s infinite ease-in-out;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
 }
 
 .element1 {
@@ -163,10 +283,6 @@ const mouseleaveHandler = () => {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   animation: cardPop 1s ease-out;
   display: flex;
-  position: fixed;
-  right: 10%;
-  top: 50%;
-  transform: translateY(-50%);
 }
 
 .card-left {
@@ -186,12 +302,12 @@ const mouseleaveHandler = () => {
   justify-content: center;
 }
 
-/* 粒子效果 */
 .particle {
   position: absolute;
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.9);
   border-radius: 50%;
-  animation: particleMove 6s infinite linear;
+  animation: particleMove 5s infinite ease-in-out;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
 }
 
 .particle-1 {
@@ -251,44 +367,46 @@ const mouseleaveHandler = () => {
   animation-delay: 4s;
 }
 
-/* 核心发光效果 */
 .core-glow {
   position: absolute;
-  width: 80px;
-  height: 80px;
+  width: 100px;
+  height: 100px;
   background: radial-gradient(
     circle,
-    rgba(255, 255, 255, 0.9) 10%,
-    rgba(76, 110, 244, 0.5) 70%,
+    rgba(255, 255, 255, 1) 10%,
+    rgba(76, 110, 244, 0.6) 60%,
     transparent 100%
   );
   border-radius: 50%;
-  animation: glow 3s infinite ease-in-out;
+  animation: glowPulse 2s infinite ease-in-out;
+  box-shadow: 0 0 30px rgba(76, 110, 244, 0.8);
 }
 
-/* 波纹效果 */
 .ripple-circle {
   position: absolute;
-  width: 200px;
-  height: 200px;
-  background: radial-gradient(circle, rgba(76, 110, 244, 0.4) 0%, rgba(255, 255, 255, 0) 70%);
+  width: 220px;
+  height: 220px;
+  background: radial-gradient(circle, rgba(76, 110, 244, 0.5) 0%, rgba(255, 255, 255, 0) 70%);
   border-radius: 50%;
-  animation: ripple 3s infinite ease-out;
+  animation: rippleExpand 3.5s infinite ease-out;
+  box-shadow: 0 0 20px rgba(76, 110, 244, 0.4);
 }
 
 .ripple-delay {
-  animation-delay: 1.5s;
+  animation-delay: 1.75s;
+  background: radial-gradient(circle, rgba(163, 193, 255, 0.5) 0%, rgba(255, 255, 255, 0) 70%);
 }
 
-/* 旋转环 */
 .rotating-ring {
   position: absolute;
-  width: 200px;
-  height: 200px;
-  border: 2px solid rgba(255, 255, 255, 0.5);
+  width: 220px;
+  height: 220px;
+  border: 3px solid rgba(255, 255, 255, 0.6);
   border-radius: 50%;
   border-top-color: #ffffff;
-  animation: rotate 4s infinite linear;
+  border-right-color: rgba(255, 255, 255, 0.8);
+  animation: rotateGlow 3s infinite linear;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
 }
 
 .card-right {
@@ -297,35 +415,65 @@ const mouseleaveHandler = () => {
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 20px;
 }
 
 .login-content {
+  width: 100%;
+  max-width: 350px;
   text-align: center;
 }
 
+.login-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 20px;
+  animation: fadeIn 1s ease-in;
+}
+
+.el-form {
+  width: 100%;
+}
+
+.el-form-item {
+  margin-bottom: 20px;
+}
+
+.options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+}
+
+.forgot-password {
+  color: #4c6ef4;
+  text-decoration: none;
+  margin-left: 187px;
+  transition: color 0.3s ease;
+}
+
+.forgot-password:hover {
+  color: #3858d6;
+}
+
 .login-button {
-  padding: 12px 24px;
-  background: #4c6ef4;
-  color: white;
-  border: none;
-  border-radius: 6px;
+  width: 100%;
+  padding: 12px;
   font-size: 16px;
-  cursor: pointer;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
 }
 
 .login-button:hover {
-  background: #3858d6;
   transform: translateX(5px);
 }
 
 .login-button:active {
-  background: #2a47b8;
   transform: scale(0.95);
   transition: all 0.1s ease;
 }
@@ -340,108 +488,140 @@ const mouseleaveHandler = () => {
   transform: translateX(5px);
 }
 
-/* 动画定义 */
-@keyframes float {
+.social-login {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin: 20px 0;
+}
+
+.social-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.register-link {
+  font-size: 14px;
+  color: #666;
+}
+
+.register-link a {
+  color: #4c6ef4;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.register-link a:hover {
+  color: #3858d6;
+}
+
+/* 动画 */
+@keyframes floatGlow {
   0% {
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
+    opacity: 0.8;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
   }
   50% {
-    transform: translateY(-4vh);
+    transform: translateY(-4vh) scale(1.1);
+    opacity: 1;
+    box-shadow: 0 0 25px rgba(255, 255, 255, 0.5);
   }
   100% {
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
+    opacity: 0.8;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
   }
 }
 
 @keyframes cardPop {
   0% {
     opacity: 0;
-    transform: translateY(-50%) scale(0.8);
+    transform: scale(0.8);
   }
   100% {
     opacity: 1;
-    transform: translateY(-50%) scale(1);
+    transform: scale(1);
   }
 }
 
-@keyframes ripple {
+@keyframes rippleExpand {
   0% {
-    transform: scale(0);
-    opacity: 1;
+    transform: scale(0.8);
+    opacity: 0.8;
+    box-shadow: 0 0 10px rgba(76, 110, 244, 0.4);
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.5;
+    box-shadow: 0 0 20px rgba(76, 110, 244, 0.6);
   }
   100% {
     transform: scale(2.5);
     opacity: 0;
+    box-shadow: 0 0 30px rgba(76, 110, 244, 0);
   }
 }
 
-@keyframes glow {
+@keyframes glowPulse {
   0%,
   100% {
     transform: scale(1);
-    opacity: 0.8;
+    opacity: 0.9;
+    box-shadow: 0 0 20px rgba(76, 110, 244, 0.6);
   }
   50% {
-    transform: scale(1.2);
+    transform: scale(1.15);
     opacity: 1;
+    box-shadow: 0 0 40px rgba(76, 110, 244, 0.9);
   }
 }
 
-@keyframes rotate {
+@keyframes rotateGlow {
   0% {
     transform: rotate(0deg);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(255, 255, 255, 0.8);
   }
   100% {
     transform: rotate(360deg);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
   }
 }
 
 @keyframes particleMove {
   0% {
-    transform: translate(0, 0);
-    opacity: 0.7;
+    transform: translate(0, 0) scale(1);
+    opacity: 0.9;
+  }
+  25% {
+    transform: translate(25px, -25px) scale(1.2);
+    opacity: 0.6;
   }
   50% {
-    transform: translate(20px, -20px);
-    opacity: 0.3;
+    transform: translate(-15px, 15px) scale(0.9);
+    opacity: 0.4;
   }
-  100% {
-    transform: translate(0, 0);
+  75% {
+    transform: translate(20px, 10px) scale(1.1);
     opacity: 0.7;
   }
-}
-
-/* 响应式调整 */
-@media screen and (max-width: 768px) {
-  .background-element {
-    min-width: 30px;
-    min-height: 30px;
-  }
-  .card {
-    width: 90vw;
-    right: 5%;
-  }
-  .core-glow {
-    width: 60px;
-    height: 60px;
-  }
-  .ripple-circle {
-    width: 150px;
-    height: 150px;
-  }
-  .rotating-ring {
-    width: 130px;
-    height: 130px;
+  100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.9;
   }
 }
 
-@media screen and (max-height: 600px) {
-  .background-element {
-    min-width: 30px;
-    min-height: 30px;
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
   }
-  .card {
-    height: 80vh;
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 </style>
