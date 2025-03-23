@@ -1,6 +1,6 @@
 @import './base.css';
 #app {
-  width: 100vw;
+  width: 100%;
   min-height: 100vh; /* 确保占满视口高度 */
   margin: 0;
   padding: 0; /* 移除全局内边距，交给子组件控制 */
