@@ -9,6 +9,6 @@ export default {
   wechatLogin: "WeChat Login",
   dingtalkLogin: "DingTalk Login",
   githubLogin: "GitHub Login",
-  noAccount: "Don’t have an account?",
+  noAccount: "Don't have an account?",
   register: "Register now",
 };

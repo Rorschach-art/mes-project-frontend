@@ -28,38 +28,38 @@ const handleLangChange = (lang: string) => {
   }
 }
 
-const dividerPath = ref<SVGPathElement | null>(null)
 const pathD = ref('')
 const initialPath = ref('')
 
 const calculatePath = () => {
   pathD.value = `
     M 90 0
-    C 70 30,
-      30 70,
-      10 100
+    C 82 15,
+      45 22,
+      30 50
+    C 15 75,
+      45 75,
+      55 100
     L 100 100
     L 100 0
     Z
   `
   initialPath.value = `
-    M -100 0
-    L -100 100
-    L 100 100
-    L 100 0
+    M 190 0
+    C 182 15,
+      145 22,
+      130 50
+    C 115 75,
+      145 75,
+      155 100
+    L 200 100
+    L 200 0
     Z
   `
 }
 
 onMounted(() => {
   calculatePath()
-  if (dividerPath.value) {
-    const pathLength = dividerPath.value.getTotalLength()
-    dividerPath.value.style.strokeDasharray = String(pathLength)
-    dividerPath.value.style.strokeDashoffset = String(pathLength)
-  } else {
-    console.warn('dividerPath is null')
-  }
 })
 
 const hover = ref(false)
@@ -98,8 +98,8 @@ const socialLogin = (type: string) => {
   <div class="login-page">
     <!-- 背景SVG分割线 -->
     <svg class="background-divider" preserveAspectRatio="none" viewBox="0 0 100 100">
-      <path ref="dividerPath" :d="pathD" fill="none" stroke="#ffffff" stroke-width="0.2" />
-      <path :d="pathD" fill-rule="evenodd">
+      <!-- <path :d="pathD" fill="none" stroke="#ffffff" stroke-width="0.2" /> -->
+      <path :d="pathD" fill="rgba(255, 255, 255, 0.9)" fill-rule="evenodd">
         <animate
           attributeName="d"
           :from="initialPath"
@@ -107,9 +107,11 @@ const socialLogin = (type: string) => {
           dur="2s"
           fill="freeze"
           calcMode="spline"
-          keySplines="0.42 0 0.58 1"
+          keySplines="0.25 0.1 0.25 1"
           keyTimes="0;1"
         />
+        <!-- 添加透明度动画 -->
+        <animate attributeName="opacity" from="0" to="1" dur="1s" begin="0s" fill="freeze" />
       </path>
     </svg>
 
@@ -238,10 +240,23 @@ const socialLogin = (type: string) => {
         </div>
       </div>
     </div>
+    <p class="copyright">版权归属 @Asher所有,请联系 liu2998606801@outlook.com 获取详情</p>
   </div>
 </template>
 
 <style scoped>
+/*版权信息 */
+.copyright {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #333;
+  font-size: 12px;
+  text-align: center;
+  z-index: 1000;
+  opacity: 0.5;
+}
 .login-page {
   position: fixed;
   top: 0;
@@ -253,7 +268,7 @@ const socialLogin = (type: string) => {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  padding-right: 5%; /* 调整以确保卡片在右侧 */
+  padding-right: 5%;
 }
 
 .background-divider {
@@ -263,15 +278,15 @@ const socialLogin = (type: string) => {
   top: 0;
   left: 0;
   pointer-events: none;
-  transform: translateX(-100%);
-  animation: slideIn 2s ease-in-out forwards;
-  z-index: 0; /* SVG 在卡片之下 */
+  z-index: 0;
+  /* 确保SVG覆盖整个区域 */
+  min-width: 100%;
+  min-height: 100%;
 }
 
 .background-divider path:first-child {
   stroke: #ffffff !important;
   stroke-width: 0.2 !important;
-  animation: drawLine 2s ease-in-out forwards;
   z-index: 1;
   position: relative;
 }
@@ -287,9 +302,9 @@ const socialLogin = (type: string) => {
   left: 0;
   right: 50%;
   animation:
-    slideIn 2s ease-in-out forwards,
-    floatGlow 6s infinite ease-in-out;
-  transform: translateX(-100%);
+    slideInFromRight 2s ease-in-out forwards,
+    /* 从右侧滑入 */ floatGlow 6s infinite ease-in-out;
+  transform: translateX(100%); /* 初始位置：右侧 */
 }
 /* 左边浮动元素 */
 .left-element {
@@ -664,39 +679,15 @@ const socialLogin = (type: string) => {
 .register-link a:hover {
   color: #3858d6;
 }
-
-/* 动画 */
-@keyframes floatGlow {
+@keyframes slideInFromRight {
   0% {
-    transform: translateY(0) scale(1);
-    opacity: 0.8;
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
-  }
-  50% {
-    transform: translateY(-4vh) scale(1.1);
-    opacity: 1;
-    box-shadow: 0 0 25px rgba(255, 255, 255, 0.5);
-  }
-  100% {
-    transform: translateY(0) scale(1);
-    opacity: 0.8;
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
-  }
-}
-@keyframes slideIn {
-  0% {
-    transform: translateX(-100%);
+    transform: translateX(100%);
   }
   100% {
     transform: translateX(0);
   }
 }
 
-@keyframes drawLine {
-  to {
-    stroke-dashoffset: 0;
-  }
-}
 @keyframes cardPop {
   0% {
     opacity: 0;
@@ -794,18 +785,22 @@ const socialLogin = (type: string) => {
   }
 }
 
+/* 浮动动画保持不变 */
 @keyframes floatGlow {
   0% {
     transform: translateY(0) scale(1);
     opacity: 0.8;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
   }
   50% {
-    transform: translateY(-30px) scale(1.1);
+    transform: translateY(-4vh) scale(1.1);
     opacity: 1;
+    box-shadow: 0 0 25px rgba(255, 255, 255, 0.5);
   }
   100% {
     transform: translateY(0) scale(1);
     opacity: 0.8;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
   }
 }
 </style>
