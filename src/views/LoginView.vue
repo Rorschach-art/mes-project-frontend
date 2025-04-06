@@ -3,9 +3,12 @@ import { ref, onMounted, reactive } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import { User, Lock, Message } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
-
+import { apiClient } from '../utils/axios'
+import type { FormattedResponse } from '../utils/axios'
+import { useAuthStore } from '../stores/counter'
+const counterStore = useAuthStore() // 引入store
 const { locale, t } = useI18n()
-
+const axios = apiClient
 const currentLang = ref('zh')
 const langOptions = [
   { label: '日本語', value: 'ja' },
@@ -23,7 +26,7 @@ const rules = ref<FormRules>({
 const handleLangChange = (lang: string) => {
   locale.value = lang
   rules.value = {
-    username: [{ required: true, message: t('usernamePlaceholder'), trigger: 'blur' }],
+    code: [{ required: true, message: t('usernamePlaceholder'), trigger: 'blur' }],
     password: [{ required: true, message: t('passwordPlaceholder'), trigger: 'blur' }],
   }
 }
@@ -58,33 +61,59 @@ const calculatePath = () => {
   `
 }
 
-onMounted(() => {
-  calculatePath()
-})
-
 const hover = ref(false)
 const active = ref(false)
 const loading = ref(false)
 const loginFormRef = ref<FormInstance>()
-const loginForm = reactive({
-  username: '',
-  password: '',
-  rememberMe: false,
+interface LoginForm {
+  code: string
+  password: string
+}
+interface LoginResult {
+  code: string
+  username: string
+  email: string
+  phone: string
+  token: string
+  refreshToken: string
+}
+const loginForm = reactive<LoginForm>({
+  code: '13753707944',
+  password: '123456',
+})
+const rememberMe = ref(false)
+const LoginResult = reactive<FormattedResponse<LoginResult>>({
+  isSuccess: false,
+  message: '',
+  data: {
+    code: '',
+    username: '',
+    email: '',
+    phone: '',
+    token: '',
+    refreshToken: '',
+  },
+  responseCode: null,
+  errorInfo: null,
 })
 
+onMounted(() => {
+  calculatePath()
+})
 const mouseleaveHandler = () => {
   hover.value = false
   active.value = false
 }
 
-const handleLogin = () => {
-  loginFormRef.value?.validate((valid) => {
+const handleLogin = async () => {
+  loginFormRef.value?.validate(async (valid) => {
     if (valid) {
-      loading.value = true
-      console.log('登录信息:', loginForm)
-      setTimeout(() => {
-        loading.value = false
-      }, 1000)
+      await axios.post<LoginResult>('/User/UserLogin', loginForm).then((res) => {
+        if (res.isSuccess) {
+          console.log('登录成功', res)
+          counterStore.login(res.data.token, res.data.refreshToken)
+        }
+      })
     }
   })
 }
@@ -145,12 +174,8 @@ const socialLogin = (type: string) => {
             :rules="rules"
             @submit.prevent="handleLogin"
           >
-            <el-form-item prop="username">
-              <el-input
-                v-model="loginForm.username"
-                :placeholder="$t('usernamePlaceholder')"
-                clearable
-              >
+            <el-form-item prop="code">
+              <el-input v-model="loginForm.code" :placeholder="$t('usernamePlaceholder')" clearable>
                 <template #prefix>
                   <el-icon><User /></el-icon>
                 </template>
@@ -170,7 +195,7 @@ const socialLogin = (type: string) => {
             </el-form-item>
             <el-form-item>
               <div class="options">
-                <el-switch v-model="loginForm.rememberMe" :active-text="$t('rememberMe')" />
+                <el-switch v-model="rememberMe" :active-text="$t('rememberMe')" />
                 <el-link href="#" class="forgot-password">{{ $t('forgotPassword') }}</el-link>
               </div>
             </el-form-item>

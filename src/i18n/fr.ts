@@ -1,6 +1,6 @@
 export default {
   welcome: "Bienvenue à la connexion",
-  usernamePlaceholder: "Veuillez entrer le nom d'utilisateur",
+  usernamePlaceholder: "Compte/Email/Numéro de téléphone/Numéro d’ID",
   passwordPlaceholder: "Veuillez entrer le mot de passe",
   rememberMe: "Se souvenir de moi",
   forgotPassword: "Mot de passe oublié ?",
