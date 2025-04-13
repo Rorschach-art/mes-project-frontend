@@ -1,6 +1,6 @@
 export default {
   welcome: "ログインへようこそ",
-  usernamePlaceholder: "ユーザー名を入力してください",
+  usernamePlaceholder: "アカウント/メール/電話番号/ID番号",
   passwordPlaceholder: "パスワードを入力してください",
   rememberMe: "ログイン情報を記憶",
   forgotPassword: "パスワードを忘れましたか？",

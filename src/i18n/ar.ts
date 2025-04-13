@@ -1,6 +1,6 @@
 export default {
   welcome: "مرحبًا بك في تسجيل الدخول",
-  usernamePlaceholder: "الرجاء إدخال اسم المستخدم",
+  usernamePlaceholder: "الحساب/البريد الإلكتروني/رقم الهاتف/رقم الهوية",
   passwordPlaceholder: "الرجاء إدخال كلمة المرور",
   rememberMe: "تذكرني",
   forgotPassword: "هل نسيت كلمة المرور؟",
