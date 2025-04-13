@@ -10,7 +10,7 @@ const welcomeText = ref('欢迎体验MES系统')
         <div class="text-container">
           <h1 class="title">{{ welcomeText }}</h1>
           <p class="subtitle">智能制造的起点 - MES系统欢迎您</p>
-          <a href="/LoginView" class="cta-button">探索更多</a>
+          <a href="/loginview" class="cta-button">探索更多</a>
         </div>
       </div>
       <div class="background-overlay"></div>

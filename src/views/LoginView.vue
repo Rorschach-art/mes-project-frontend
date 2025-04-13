@@ -1,13 +1,17 @@
 <script setup lang="ts">
+import { h } from 'vue'
 import { ref, onMounted, reactive } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import { User, Lock, Message } from '@element-plus/icons-vue'
+import { ElNotification } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 import { apiClient } from '../utils/axios'
 import type { FormattedResponse } from '../utils/axios'
+import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/counter'
 const counterStore = useAuthStore() // 引入store
 const { locale, t } = useI18n()
+const router = useRouter()
 const axios = apiClient
 const currentLang = ref('zh')
 const langOptions = [
@@ -110,8 +114,26 @@ const handleLogin = async () => {
     if (valid) {
       await axios.post<LoginResult>('/User/UserLogin', loginForm).then((res) => {
         if (res.isSuccess) {
-          console.log('登录成功', res)
+          ElNotification({
+            title: '登录成功',
+            message: h('i', { style: 'color: teal' }, '欢迎回来，' + res.data.username),
+            offset: 100,
+            showClose: false,
+            type: 'success',
+            duration: 3000,
+          })
           counterStore.login(res.data.token, res.data.refreshToken)
+          //路由name是base-aboutview的页面
+          router.push('/base/aboutview')
+        } else {
+          ElNotification({
+            title: '登录失败',
+            offset: 100,
+            message: h('i', { style: 'color: red' }, res.message),
+            type: 'error',
+            showClose: false,
+            duration: 3000,
+          })
         }
       })
     }
